@@ -7,6 +7,7 @@ import (
 
 const BUFF_LEN = 4096
 func handleConnection(c net.Conn){
+	fmt.Println("Connection from: ", conn.RemoteAddr())
 	buff := make([]byte, BUFF_LEN)
 	for{
 		count, err := c.Read(buff);
