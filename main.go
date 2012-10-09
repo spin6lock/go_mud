@@ -5,35 +5,21 @@ import (
 	"net"
 )
 
-const BUFF_LEN = 4096
-func handleConnection(c net.Conn){
-	fmt.Println("Connection from: ", c.RemoteAddr())
-	buff := make([]byte, BUFF_LEN)
-	for{
-		count, err := c.Read(buff);
-		if err != nil{
-			fmt.Println(err)
-			return
-		}
-		if count != 0{
-			fmt.Println(string(buff))
-			c.Write(buff)
-		}
-	}
-}
-
 func main(){
 	fmt.Println("start up server")
-	ln, err := net.Listen("tcp", ":19840")
-	if err != nil {
-		fmt.Println("bind failed")
+	ln, err := bind_socket()
+	if err != nil{
+		return
 	}
+	//network_manager()
+	//start_the_world()
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
 			fmt.Println("Accept failed")
 			continue
 		}
-		go handleConnection(conn)
+		go HandleConnection(conn)
 	}
+	//clean up the world
 }
