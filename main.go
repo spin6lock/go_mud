@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net"
 )
 
 func main(){
@@ -11,7 +10,8 @@ func main(){
 	if err != nil{
 		return
 	}
-	//network_manager()
+	network_manager := new(NetworkManager)
+	network_manager.control_channels = make(map[string]chan string)
 	//start_the_world()
 	for {
 		conn, err := ln.Accept()
@@ -19,7 +19,7 @@ func main(){
 			fmt.Println("Accept failed")
 			continue
 		}
-		go HandleConnection(conn)
+		go HandleConnection(conn, network_manager)
 	}
 	//clean up the world
 }
