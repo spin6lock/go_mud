@@ -6,33 +6,18 @@ import (
 	"io"
 )
 
-type NetworkManager struct{
-	online_count int //do i need mutex to protect online count?
-	control_channels map[string]chan string
-}
-
-func (this *NetworkManager) RegisterControlChannel(c net.Conn) chan string{
-	this.online_count++
-	key := c.RemoteAddr().String()
-	this.control_channels[key] = make(chan string)
-	return this.control_channels[key]
-}
-
-func (this *NetworkManager) UnregisterControlChannel(c net.Conn){
-	this.online_count--
-	key := c.RemoteAddr().String()
-	delete(this.control_channels, key)
-}
 
 const BUFF_LEN = 4096
 func HandleConnection(c net.Conn, manager *NetworkManager){
+	defer c.Close()
 	fmt.Println("Connection from: ", c.RemoteAddr())
 	quit := manager.RegisterControlChannel(c)
 	buff := make([]byte, BUFF_LEN)
+	loop:
 	for{
 		select{
 			case <-quit:
-				break
+				break loop
 			default:
 				count, err := c.Read(buff)
 				if err != nil{
