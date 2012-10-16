@@ -25,8 +25,10 @@ func (this *NetworkManager) UnregisterControlChannel(c net.Conn){
 
 func (this *NetworkManager) QuitAllChannel(){
 	for k, v := range this.control_channels {
-		fmt.Println(k)
-		v <- "quit" //block here
+		go func(ch chan string){
+			fmt.Println(k)
+			ch <- "quit" //block here
+		}(v)
 	}
 }
 
