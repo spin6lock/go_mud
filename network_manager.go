@@ -3,14 +3,18 @@ package main
 import (
 	"fmt"
 	"net"
+	"sync"
 )
 
 type NetworkManager struct{
 	online_count int //do i need mutex to protect online count?
 	control_channels map[string]chan string
+	mutex *sync.Mutex
 }
 
 func (this *NetworkManager) RegisterControlChannel(c net.Conn) chan string{
+	defer this.mutex.Unlock()
+	this.mutex.Lock()
 	this.online_count++
 	key := c.RemoteAddr().String()
 	this.control_channels[key] = make(chan string)
