@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
-//	"time"
+	//	"time"
 	"sync"
 )
 
-func main(){
+func main() {
 	fmt.Println("start up server")
 	ln, err := bind_socket()
-	if err != nil{
+	if err != nil {
 		return
 	}
 	network_manager := new(NetworkManager)
@@ -17,12 +17,12 @@ func main(){
 	network_manager.mutex = new(sync.Mutex)
 	//start_the_world()
 	/*
-	go func(){
-		timer := time.NewTimer(time.Second * 10)
-		<-timer.C
-		fmt.Println("quit all channel")
-		network_manager.QuitAllChannel()
-	}()
+		go func(){
+			timer := time.NewTimer(time.Second * 10)
+			<-timer.C
+			fmt.Println("quit all channel")
+			network_manager.QuitAllChannel()
+		}()
 	*/
 	for {
 		conn, err := ln.Accept()
